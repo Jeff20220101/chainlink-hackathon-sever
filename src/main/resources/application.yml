@@ -1,0 +1,48 @@
+server:
+  # 优雅停机
+  shutdown: GRACEFUL
+  undertow:
+    #设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+    io-threads: 2
+    # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+    worker-threads: 100
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+    # 每块buffer的空间大小,越小的空间被利用越充分
+    buffer-size: 1024
+    # 是否分配的直接内存
+    direct-buffers: true
+    max-http-post-size: 1048576000
+
+  compression:
+    enabled: true
+    min-response-size: 10
+    mime-types:
+       - application/json
+spring:
+  application:
+    name: @artifactId@
+  profiles:
+    active: @profileActive@
+  servlet:
+    multipart:
+      enabled: true #是否启用http上传处理
+      max-file-size: 10MB #设置单个文件最大长度
+      max-request-size: 100MB #最大请求文件的大小
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+
+# 监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /api/scope_hackathon/monitor
+  endpoint:
+    shutdown:
+      enabled: false
+    metrics:
+      enabled: true
+    health:
+      show-details: always

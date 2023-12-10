@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scope.mapper.hackathon.HackathonMapper">
+    <select id="getSmartScWalletList" resultType="com.scope.entity.dto.hackathon.SmartScWalletDto">
+        select *
+        from test.create_wallet_event
+        where owner = #{address}
+        order by block_number desc
+    </select>
+
+    <select id="getApprovalsList" resultType="com.scope.entity.dto.hackathon.ApprovalDto">
+        select block_number,
+               transaction_hash,
+               token as contract_address,
+               amount
+        from test.approve_event
+        where wallet = #{address}
+        order by block_number desc
+    </select>
+
+    <select id="getRevokeAlertList" resultType="com.scope.entity.dto.hackathon.RevokeAlertDto">
+        select block_number,
+               transaction_hash,
+               wallet_id,
+               token as contract_address,
+               reason
+        from test.revoke_event
+        where wallet = #{address}
+        order by block_number desc
+    </select>
+
+    <select id="getWalletIdList" resultType="java.lang.String">
+        select wallet_id
+        from test.walletid_event
+        where wallet = #{address}
+        order by block_number desc
+        limit 10
+    </select>
+</mapper>
